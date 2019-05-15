@@ -18,9 +18,15 @@
 			(((uint_16)(x) & 0xff00) >> 8) \
 			)
 
+struct custom { //自定义的卡片存储区
+
+	char num[5];
+};
+
 struct card {
 	unsigned short mCardType;
 	unsigned int id;
+	struct custom buf;  //根据数据需求自定义的存储区
 };
 
 int rfid_writeData(int fd, const unsigned short addr, const unsigned short len, unsigned char pass[8], char *buff);

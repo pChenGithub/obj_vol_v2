@@ -9,6 +9,38 @@
 #include "debug.h"
 #include "rfid.h"
 #include "uart.h"
+#include "voltage.h"
+#include "ipc.h"
+
+void main() {}
+
+#if 0
+struct msg_buf msgBuf;
+struct data_vol *vol;
+int main() {
+
+	int msgId, ret;
+
+	/* ipc msg */
+	msgId = ipc_msgCreat("/root/ipc_msg.c", 'c');
+	if (msgId < 0) {     
+		perror("creat msg id error ... \n");
+		return -1;
+	}
+
+	while (1) {
+
+		ret = msgrcv(msgId, &msgBuf, sizeof(msgBuf.data), 0, 0);
+
+		vol = (struct data_vol*)(msgBuf.data);
+
+		printf("test data: v %f i %f p %f ... \n", vol->v, vol->i, vol->p);
+
+	}
+
+	return 0;
+}
+#endif
 
 #if 0
 int main() {

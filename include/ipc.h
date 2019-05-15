@@ -23,6 +23,13 @@ struct msg_buf
 	char data[MSG_LEN];
 };
 
+enum chanel_t {
+	CMD_BLE = 10,
+	DATA_BLE,
+	CMD_MAIN,
+	DATA_MAIN,
+};
+
 int ipc_msgCreat(char *file, char c);
 
 #endif

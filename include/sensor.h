@@ -8,6 +8,16 @@
 #ifndef _SENSOR_H_
 #define _SENSOR_H_
 
+enum sensor_t {
 
+	RFID = 100,
+	VOLTAGE,
+};
+
+struct sensor {
+
+	enum sensor_t type;
+	char buf[32];
+};
 
 #endif

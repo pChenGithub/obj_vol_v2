@@ -1,27 +1,29 @@
 
 CROSS_COMPILE?=arm-fsl-linux-gnueabi-
+#CROSS_COMPILE?=
 CC:=$(CROSS_COMPILE)gcc
 INC:=-I./include
-CFLAGS:= $(INC)
-LDFLAGS:=
+CFLAGS:= $(INC) -DDEBUG_P -DDEBUG
+LDFLAGS:= -lpthread
 
 
 
 .PHONY : all
-all: rfid vol
-
-target:=rfid
-src:= rfid.c ipc/ipc_msg.c
-
-$(target): $(src)
-	$(CC) $^ -o $@ $(CFLAGS)
+all: main vol readCard transferBle
+	@echo "build all"
 
 
-target:=vol
-src:= vol.c ipc/ipc_msg.c
+#target:=test
+#src:= test.c libipc/ipc.c
 
-$(target): $(src)
-	$(CC) $^ -o $@ $(CFLAGS)
+#$(target): $(src)
+#	@echo "build test"
+#	$(CC) $^ -o $@ $(CFLAGS)
+
+include ./mainApp/Makefile
+include ./voltage/Makefile
+include ./rfidCard/Makefile
+include ./transfer/Makefile
 
 .PHONY : clean
 	rm 

@@ -18,5 +18,7 @@
 
 
 int open_port(const char *portname);
+int open_port_mode1(const char *portname);
+
 
 #endif

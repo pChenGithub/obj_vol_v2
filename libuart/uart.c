@@ -42,3 +42,50 @@ int open_port(const char *portname)
 	tcsetattr(portfd,TCSADRAIN,&newtios);
 	return portfd;
 }
+
+
+
+/********************************************
+ *
+ *		电量计串口打开模式
+ *		波特率 4800 8数据位 1停止位 偶校验
+ *
+ * ******************************************/
+
+
+int open_port_mode1(const char *portname)
+{
+	int portfd;
+
+	PDEB("opening serial port:%s\n",portname);
+	/*open serial port */
+	if((portfd=open(portname,O_RDWR | O_NOCTTY )) < 0 )
+	{
+   		printf("open serial port %s fail \n ",portname);
+   		return portfd;
+	}
+
+	/*get serial port parnms,save away */
+	tcgetattr(portfd,&newtios);
+	memcpy(&oldtios,&newtios,sizeof newtios);
+	/* configure new values */
+	cfmakeraw(&newtios); /*see man page */
+	newtios.c_iflag |=IGNPAR; /*ignore parity on input */
+	newtios.c_oflag &= ~(OPOST | ONLCR | OLCUC | OCRNL | ONOCR | ONLRET | OFILL); 
+	
+	//newtios.c_cflag = CS8 | CLOCAL | CREAD;
+	newtios.c_cflag = CS8 | CLOCAL | CREAD | PARENB | INPCK;
+        newtios.c_cflag &= ~PARODD;
+
+	newtios.c_cc[VMIN]=1; /* block until 1 char received */
+	newtios.c_cc[VTIME]=0; /*no inter-character timer */
+	/* 115200 bps */
+	cfsetospeed(&newtios,B4800);
+	cfsetispeed(&newtios,B4800);
+	/*apply modified termios */
+	tcflush(portfd,TCIFLUSH);
+	tcsetattr(portfd,TCSADRAIN,&newtios);
+	return portfd;
+}
+
+

@@ -6,12 +6,14 @@
  ************************************************************************/
 
 
-#include "ble_recv.h"
+#include "ble.h"
 
+/*
 static char TXbuf[17] = {0x4f, 0x45, 0x6f, 0x65, 0x00, 0x80, 0x00};
 static char RXbuf[18] = {0};
 
 struct ble_msgCount msgCount = {0};
+*/
 
 #if defined JO_MODE_BLE
 /********************************************
@@ -57,13 +59,13 @@ int send_data(int fd, char *buf, int len) {
  *		偶亿模块的发送方式
  *
  * ******************************************/
-int send_data(int fd, char *buf, int len) {
+int send_data(struct ble_transfer* tr, char *buf, int len) {
 	int n,i;
 	char *p;
+	int fd = tr->fd;
+	char* TXbuf = tr->TXbuf;
 	
-#if DEBUG_P
-	printf("send data by ole ...\n");
-#endif
+	PDEB("send data by ole ...\n");
 
 	if (len>10) {
 		perror("len too long ...\n");
@@ -100,9 +102,11 @@ int send_data(int fd, char *buf, int len) {
  *		蓝牙透传数据接收---还未实现
  *
  * ******************************************/
-int recv_data(int fd, char *buf, int len) {
+int recv_data(struct ble_transfer* tr, char *buf, int len) {
 
 	int n, i;
+	int fd = tr->fd;
+	char* RXbuf = tr->RXbuf;
 	char *p = RXbuf+8;
 
 	if (len<10) {
